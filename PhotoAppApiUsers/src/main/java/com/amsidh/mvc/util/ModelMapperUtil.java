@@ -1,9 +1,10 @@
 package com.amsidh.mvc.util;
 
-import com.amsidh.mvc.service.model.UserDto;
 import com.amsidh.mvc.repository.entity.UserEntity;
+import com.amsidh.mvc.service.model.UserDto;
 import com.amsidh.mvc.ui.UserRequestModel;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +15,13 @@ import static org.modelmapper.convention.MatchingStrategies.STRICT;
 @Service
 public class ModelMapperUtil {
     private ModelMapper modelMapper = new ModelMapper();
+    private EncryptedPasswordUtil encryptedPasswordUtil;
 
-    public ModelMapperUtil() {
+    @Autowired
+    public ModelMapperUtil(EncryptedPasswordUtil encryptedPasswordUtil) {
         this.modelMapper.getConfiguration()
                 .setMatchingStrategy(STRICT);
+        this.encryptedPasswordUtil = encryptedPasswordUtil;
     }
 
     //UserDto and UserRequestModel Mappings
@@ -46,7 +50,7 @@ public class ModelMapperUtil {
 
     public UserEntity getUserEntity(UserDto userDto) {
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-        userEntity.setEncryptedPassword(EncryptedPasswordUtil.encrypt(userDto.getPassword()));
+        userEntity.setEncryptedPassword(encryptedPasswordUtil.encrypt(userDto.getPassword()));
         return userEntity;
     }
 

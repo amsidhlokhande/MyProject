@@ -17,13 +17,13 @@ public class ModelMapperUtilTest {
     private ModelMapperUtil modelMapperUtil;
 
     @Before
-    public void setup(){
+    public void setup() {
         this.modelMapperUtil = new ModelMapperUtil();
     }
 
 
     @Test
-    public void testUserEntityToUserDto(){
+    public void testUserEntityToUserDto() {
         UserEntity userEntity = getUserEntity();
         UserDto userDto = modelMapperUtil.getUserDto(userEntity);
         assertEquals(userEntity.getFirstName(), userDto.getFirstName());
@@ -34,7 +34,7 @@ public class ModelMapperUtilTest {
     }
 
     @Test
-     public void testUserDtoToUserEntity(){
+    public void testUserDtoToUserEntity() {
         UserDto userDto = getUserDto();
         UserEntity userEntity = modelMapperUtil.getUserEntity(userDto);
         assertEquals(userDto.getFirstName(), userEntity.getFirstName());
@@ -45,7 +45,7 @@ public class ModelMapperUtilTest {
     }
 
     @Test
-    public void testForUserDtosFromUserEntities(){
+    public void testForUserDtosFromUserEntities() {
 
         List<UserEntity> entities = new ArrayList<>();
         entities.add(getUserEntity());
@@ -54,7 +54,7 @@ public class ModelMapperUtilTest {
     }
 
     @Test
-    public void testForUserEntities(){
+    public void testForUserEntities() {
 
         List<UserDto> userDtos = new ArrayList<>();
         userDtos.add(getUserDto());
@@ -62,7 +62,7 @@ public class ModelMapperUtilTest {
         assertTrue(!userEntities.isEmpty());
     }
 
-    private UserEntity getUserEntity(){
+    private UserEntity getUserEntity() {
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName("Amsidh");
         userEntity.setLastName("Lokhande");
@@ -73,7 +73,7 @@ public class ModelMapperUtilTest {
         return userEntity;
     }
 
-    private UserDto getUserDto(){
+    private UserDto getUserDto() {
         UserDto userDto = new UserDto();
         userDto.setFirstName("Amsidh");
         userDto.setLastName("Lokhande");

@@ -12,7 +12,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     Environment environment;
 
     @Autowired
-    public SpringSecurityConfig(Environment environment){
+    public SpringSecurityConfig(Environment environment) {
         this.environment = environment;
     }
 
@@ -21,7 +21,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests()
                 .antMatchers("/**")
                 .hasIpAddress(environment.getProperty("ip.address.security.allow"));
-                //.authenticated();
+        //.authenticated();
         httpSecurity.csrf().disable();
         httpSecurity.headers().frameOptions().disable();
     }

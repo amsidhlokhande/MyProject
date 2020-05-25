@@ -1,7 +1,7 @@
 package com.amsidh.mvc.ui.controller;
 
-import com.amsidh.mvc.service.model.UserDto;
 import com.amsidh.mvc.service.UserService;
+import com.amsidh.mvc.service.model.UserDto;
 import com.amsidh.mvc.ui.UserRequestModel;
 import com.amsidh.mvc.util.ModelMapperUtil;
 import lombok.extern.slf4j.Slf4j;

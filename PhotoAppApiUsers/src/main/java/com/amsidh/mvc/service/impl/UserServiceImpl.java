@@ -1,9 +1,9 @@
 package com.amsidh.mvc.service.impl;
 
-import com.amsidh.mvc.service.model.UserDto;
 import com.amsidh.mvc.repository.UserRepository;
 import com.amsidh.mvc.repository.entity.UserEntity;
 import com.amsidh.mvc.service.UserService;
+import com.amsidh.mvc.service.model.UserDto;
 import com.amsidh.mvc.ui.exception.NoDataFoundException;
 import com.amsidh.mvc.ui.exception.UserNotFoundException;
 import com.amsidh.mvc.util.ModelMapperUtil;

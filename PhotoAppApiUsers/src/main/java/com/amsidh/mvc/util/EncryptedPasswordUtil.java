@@ -1,14 +1,21 @@
 package com.amsidh.mvc.util;
 
-import static java.util.Base64.getUrlDecoder;
-import static java.util.Base64.getUrlEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EncryptedPasswordUtil {
-    public static String encrypt(String plainPassword){
-        return getUrlEncoder().encodeToString(plainPassword.getBytes());
+
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    public EncryptedPasswordUtil(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public static String decrypt(String password){
-        return new String(getUrlDecoder().decode(password));
+    public String encrypt(String plainPassword) {
+        return bCryptPasswordEncoder.encode(plainPassword);
     }
+
 }
