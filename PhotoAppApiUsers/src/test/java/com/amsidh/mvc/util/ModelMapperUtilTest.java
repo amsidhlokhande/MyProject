@@ -4,6 +4,7 @@ import com.amsidh.mvc.repository.entity.UserEntity;
 import com.amsidh.mvc.service.model.UserDto;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,9 @@ public class ModelMapperUtilTest {
 
     @Before
     public void setup() {
-        this.modelMapperUtil = new ModelMapperUtil();
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        EncryptedPasswordUtil encryptedPasswordUtil = new EncryptedPasswordUtil(bCryptPasswordEncoder);
+        this.modelMapperUtil = new ModelMapperUtil(encryptedPasswordUtil);
     }
 
 

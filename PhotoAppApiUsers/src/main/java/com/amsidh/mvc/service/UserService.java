@@ -1,10 +1,11 @@
 package com.amsidh.mvc.service;
 
 import com.amsidh.mvc.service.model.UserDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     UserDto getUser(String userId);
 
@@ -15,5 +16,7 @@ public interface UserService {
     void deleteUser(String userId);
 
     List<UserDto> getAllUsers();
+
+    UserDto getUserByEmailId(String emailId);
 
 }
