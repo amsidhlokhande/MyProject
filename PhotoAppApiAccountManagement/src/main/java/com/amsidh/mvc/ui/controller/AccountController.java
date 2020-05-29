@@ -20,6 +20,6 @@ public class AccountController {
     @GetMapping("/health/check")
     public ResponseEntity<String> healthCheck() {
         return ok()
-                .body(format("Account Micro Service is up and running on port %s",environment.getProperty("local.server.port")));
+                .body(format("Account Micro Service is up and running on port %s with secret token %s", environment.getProperty("local.server.port"), environment.getProperty("jwt.token.secret")));
     }
 }
