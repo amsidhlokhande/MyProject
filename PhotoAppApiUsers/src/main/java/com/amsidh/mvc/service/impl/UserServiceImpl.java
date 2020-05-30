@@ -75,7 +75,8 @@ public class UserServiceImpl implements UserService {
             userEntity.setLastName(userDto.getLastName());
             return userEntity;
         }).orElseThrow(() -> new UserNotFoundException(userId));
-        userRepository.flush();
+        userRepository.save(updateUserEntity);
+
         return modelMapperUtil.getUserDto(updateUserEntity);
     }
 

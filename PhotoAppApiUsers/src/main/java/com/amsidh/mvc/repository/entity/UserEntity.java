@@ -5,39 +5,44 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "UserDetails")
+@Document(collection = "UserDetails")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class UserEntity implements Serializable {
-    @Id
-    @GeneratedValue
-    private Long id;
 
-    @Column(name = "USERID", nullable = false, unique = true)
+    @Id
     private String userId;
 
-    @Column(name = "FIRSTNAME", length = 50, nullable = false)
+    @Field("FIRSTNAME")
+    @Length(min = 2, max = 50)
+    @NotNull
     private String firstName;
 
-    @Column(name = "LASTNAME", length = 50, nullable = false)
+    @Field("LASTNAME")
+    @Length(min = 2, max = 50)
+    @NotNull
     private String lastName;
 
-    @Column(name = "EMAILID", length = 120, nullable = false, unique = true)
+    @Field("EMAILID")
+    @Indexed(unique = true)
+    @Length(max = 120)
+    @NotNull
     private String emailId;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Field("PASSWORD")
+    @NotNull
     private String encryptedPassword;
 
 }
