@@ -56,15 +56,6 @@ public class ModelMapperUtilTest {
         assertTrue(!userDtos.isEmpty());
     }
 
-    @Test
-    public void testForUserEntities() {
-
-        List<UserDto> userDtos = new ArrayList<>();
-        userDtos.add(getUserDto());
-        List<UserEntity> userEntities = modelMapperUtil.getUserEntities(userDtos);
-        assertTrue(!userEntities.isEmpty());
-    }
-
     private UserEntity getUserEntity() {
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName("Amsidh");

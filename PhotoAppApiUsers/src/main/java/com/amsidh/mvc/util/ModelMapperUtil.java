@@ -2,7 +2,8 @@ package com.amsidh.mvc.util;
 
 import com.amsidh.mvc.repository.entity.UserEntity;
 import com.amsidh.mvc.service.model.UserDto;
-import com.amsidh.mvc.ui.UserRequestModel;
+import com.amsidh.mvc.ui.model.UserRequestModel;
+import com.amsidh.mvc.ui.model.UserResponseModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,22 +26,18 @@ public class ModelMapperUtil {
     }
 
     //UserDto and UserRequestModel Mappings
-    public UserRequestModel getUserRequestModel(UserDto userDto) {
-        return modelMapper.map(userDto, UserRequestModel.class);
-    }
-
     public UserDto getUserDto(UserRequestModel userRequestModel) {
         return modelMapper.map(userRequestModel, UserDto.class);
     }
 
-    public List<UserRequestModel> getUserRequestModels(List<UserDto> userDtos) {
-        return userDtos.parallelStream().map(userDto -> getUserRequestModel(userDto)).collect(Collectors.toList());
+    //UserDto and UserRequestModel Mappings
+    public UserResponseModel getUserResponseModel(UserDto userDto) {
+        return modelMapper.map(userDto, UserResponseModel.class);
     }
 
-    public List<UserDto> getUserDtos(List<UserRequestModel> userRequestModels) {
-        return userRequestModels.parallelStream().map(userRequestModel -> getUserDto(userRequestModel)).collect(Collectors.toList());
+    public List<UserResponseModel> getUserResponseModels(List<UserDto> userDtos) {
+        return userDtos.parallelStream().map(userDto -> getUserResponseModel(userDto)).collect(Collectors.toList());
     }
-
 
     //UserDto and UserEntity Mapping
 
@@ -52,10 +49,6 @@ public class ModelMapperUtil {
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
         userEntity.setEncryptedPassword(encryptedPasswordUtil.encrypt(userDto.getPassword()));
         return userEntity;
-    }
-
-    public List<UserEntity> getUserEntities(List<UserDto> userDtos) {
-        return userDtos.parallelStream().map(userDto -> getUserEntity(userDto)).collect(Collectors.toList());
     }
 
     public List<UserDto> getUserDtosFromUserEntities(List<UserEntity> userEntities) {

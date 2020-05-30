@@ -90,6 +90,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- MySQL Database Dependency-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>

@@ -2,7 +2,8 @@ package com.amsidh.mvc.ui.controller;
 
 import com.amsidh.mvc.service.UserService;
 import com.amsidh.mvc.service.model.UserDto;
-import com.amsidh.mvc.ui.UserRequestModel;
+import com.amsidh.mvc.ui.model.UserRequestModel;
+import com.amsidh.mvc.ui.model.UserResponseModel;
 import com.amsidh.mvc.util.ModelMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,35 +51,35 @@ public class UserController {
     }
 
     @GetMapping(produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
-    public ResponseEntity<List<UserRequestModel>> getAllUser() {
+    public ResponseEntity<List<UserResponseModel>> getAllUser() {
         log.info("Fetching all the users");
-        return ok().body(modelMapperUtil.getUserRequestModels(userService.getAllUsers()));
+        return ok().body(modelMapperUtil.getUserResponseModels(userService.getAllUsers()));
     }
 
     @GetMapping(value = "/{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
-    public ResponseEntity<UserRequestModel> getUser(@PathVariable String userId) {
+    public ResponseEntity<UserResponseModel> getUser(@PathVariable String userId) {
         log.info(format("getUser method is called with userId %s", userId));
-        return ok().body(modelMapperUtil.getUserRequestModel(userService.getUser(userId)));
+        return ok().body(modelMapperUtil.getUserResponseModel(userService.getUser(userId)));
     }
 
     @PostMapping(
             consumes = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE}
             , produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
-    public ResponseEntity<UserRequestModel> createUser(@Valid @RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<UserResponseModel> createUser(@Valid @RequestBody UserRequestModel userRequestModel) {
         log.info(format("createUser method is called with user details %s", userRequestModel.toString()));
         UserDto userDto = userService.createUser(modelMapperUtil.getUserDto(userRequestModel));
         return ResponseEntity.status(CREATED)
-                .body(modelMapperUtil.getUserRequestModel(userDto));
+                .body(modelMapperUtil.getUserResponseModel(userDto));
     }
 
     @PutMapping(value = "/{userId}",
             consumes = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE}
             , produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
-    public ResponseEntity<UserRequestModel> updateUser(@PathVariable String userId, @Valid @RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<UserResponseModel> updateUser(@PathVariable String userId, @Valid @RequestBody UserRequestModel userRequestModel) {
         log.info(format("updateUser method is called with userId %s", userId));
         UserDto userDto = userService.updateUser(userId, modelMapperUtil.getUserDto(userRequestModel));
         return ResponseEntity.status(ACCEPTED)
-                .body(modelMapperUtil.getUserRequestModel(userDto));
+                .body(modelMapperUtil.getUserResponseModel(userDto));
     }
 
     @DeleteMapping(value = "/{userId}")

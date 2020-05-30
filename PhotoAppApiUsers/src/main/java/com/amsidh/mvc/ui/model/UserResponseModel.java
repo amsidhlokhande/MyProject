@@ -1,4 +1,4 @@
-package com.amsidh.mvc.ui;
+package com.amsidh.mvc.ui.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,12 +15,9 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class UserRequestModel {
-    private String userId;
+public class UserResponseModel {
 
-    @NotNull(message = "Password must not be null")
-    @Size(min = 8, max = 16, message = "Password must be more than 8 and less than 16 characters")
-    private String password;
+    private String userId;
 
     @NotNull(message = "First name must not be null")
     @Size(min = 2, max = 50, message = "First name must be more than 2 and less than 50 characters")
