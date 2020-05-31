@@ -4,6 +4,7 @@ import com.amsidh.mvc.repository.UserRepository;
 import com.amsidh.mvc.repository.entity.UserEntity;
 import com.amsidh.mvc.service.UserService;
 import com.amsidh.mvc.service.model.UserDto;
+import com.amsidh.mvc.ui.exception.DuplicateUserException;
 import com.amsidh.mvc.ui.exception.NoDataFoundException;
 import com.amsidh.mvc.ui.exception.UserNotFoundException;
 import com.amsidh.mvc.util.ModelMapperUtil;
@@ -15,15 +16,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
 @Slf4j
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired(required = true)
@@ -60,10 +64,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("createUser of class UserServiceImpl");
+        of(userRepository.findByEmailId(userDto.getEmailId())).ifPresent(userEntity -> {
+          throw  new DuplicateUserException("EmailId", userEntity.get().getEmailId());
+        });
         String userId = uuidUtil.getNextUuid();
         userDto.setUserId(userId);
-        userRepository.save(modelMapperUtil.getUserEntity(userDto));
-        return userDto;
+        UserEntity saveedEntity = userRepository.save(modelMapperUtil.getUserEntity(userDto));
+        return modelMapperUtil.getUserDto(saveedEntity);
     }
 
     @Override

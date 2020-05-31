@@ -45,6 +45,15 @@ public class AppExceptionHandlerControllerAdvice extends ResponseEntityException
         return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = {DuplicateUserException.class})
+    public ResponseEntity<ExceptionResponseDto> handleDataAlreadyExistsException(
+            Exception exception, WebRequest request) {
+        ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto();
+        exceptionResponseDto.setDate(LocalDateTime.now());
+        exceptionResponseDto.setMessage(ofNullable(exception.getLocalizedMessage()).orElse("No exception message found"));
+        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.CONFLICT);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto();
