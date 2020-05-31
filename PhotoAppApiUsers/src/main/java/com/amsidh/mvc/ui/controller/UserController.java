@@ -47,7 +47,7 @@ public class UserController {
     public ResponseEntity<String> healthCheck() {
         log.info("Checking health of users/health/check API");
         return ok()
-                .body(format("User Micro Service is up and running on port %s with jwt token expire time %s", environment.getProperty("local.server.port"), environment.getProperty("jwt.token.expirationTime")));
+                .body(format("User Micro Service is up and running on server %s and port %s with jwt token expire time %s", environment.getProperty("ip.address.security.allow"), environment.getProperty("local.server.port"), environment.getProperty("jwt.token.expirationTime")));
     }
 
     @GetMapping(produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
