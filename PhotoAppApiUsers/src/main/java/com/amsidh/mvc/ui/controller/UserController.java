@@ -4,7 +4,6 @@ import com.amsidh.mvc.service.UserService;
 import com.amsidh.mvc.service.model.UserDto;
 import com.amsidh.mvc.ui.model.UserRequestModel;
 import com.amsidh.mvc.ui.model.UserResponseModel;
-import com.amsidh.mvc.util.ModelMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.amsidh.mvc.util.ObjectMapperUtil.map;
+import static com.amsidh.mvc.util.ObjectMapperUtil.mapAll;
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -40,9 +41,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired(required = true)
-    private ModelMapperUtil modelMapperUtil;
-
     @GetMapping("/health/check")
     public ResponseEntity<String> healthCheck() {
         log.info("Checking health of users/health/check API");
@@ -53,13 +51,13 @@ public class UserController {
     @GetMapping(produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
     public ResponseEntity<List<UserResponseModel>> getAllUser() {
         log.info("Fetching all the users");
-        return ok().body(modelMapperUtil.getUserResponseModels(userService.getAllUsers()));
+        return ok().body(mapAll(userService.getAllUsers(),UserResponseModel.class));
     }
 
     @GetMapping(value = "/{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponseModel> getUser(@PathVariable String userId) {
         log.info(format("getUser method is called with userId %s", userId));
-        return ok().body(modelMapperUtil.getUserResponseModel(userService.getUser(userId)));
+        return ok().body(map(userService.getUser(userId),UserResponseModel.class));
     }
 
     @PostMapping(
@@ -67,9 +65,9 @@ public class UserController {
             , produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponseModel> createUser(@Valid @RequestBody UserRequestModel userRequestModel) {
         log.info(format("createUser method is called with user details %s", userRequestModel.toString()));
-        UserDto userDto = userService.createUser(modelMapperUtil.getUserDto(userRequestModel));
+        UserDto userDto = userService.createUser(map(userRequestModel,UserDto.class));
         return ResponseEntity.status(CREATED)
-                .body(modelMapperUtil.getUserResponseModel(userDto));
+                .body(map(userDto,UserResponseModel.class));
     }
 
     @PutMapping(value = "/{userId}",
@@ -77,9 +75,9 @@ public class UserController {
             , produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
     public ResponseEntity<UserResponseModel> updateUser(@PathVariable String userId, @Valid @RequestBody UserRequestModel userRequestModel) {
         log.info(format("updateUser method is called with userId %s", userId));
-        UserDto userDto = userService.updateUser(userId, modelMapperUtil.getUserDto(userRequestModel));
+        UserDto userDto = userService.updateUser(userId, map(userRequestModel,UserDto.class));
         return ResponseEntity.status(ACCEPTED)
-                .body(modelMapperUtil.getUserResponseModel(userDto));
+                .body(map(userDto,UserResponseModel.class));
     }
 
     @DeleteMapping(value = "/{userId}")

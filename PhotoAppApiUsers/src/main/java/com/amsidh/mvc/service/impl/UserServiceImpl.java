@@ -7,13 +7,13 @@ import com.amsidh.mvc.service.model.UserDto;
 import com.amsidh.mvc.ui.exception.DuplicateUserException;
 import com.amsidh.mvc.ui.exception.NoDataFoundException;
 import com.amsidh.mvc.ui.exception.UserNotFoundException;
-import com.amsidh.mvc.util.ModelMapperUtil;
 import com.amsidh.mvc.util.UuidUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.amsidh.mvc.util.ObjectMapperUtil.map;
+import static com.amsidh.mvc.util.ObjectMapperUtil.mapAll;
 import static java.lang.String.format;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
@@ -33,12 +35,12 @@ public class UserServiceImpl implements UserService {
     @Autowired(required = true)
     private UserRepository userRepository;
 
-    @Autowired(required = true)
-    private ModelMapperUtil modelMapperUtil;
 
     @Autowired(required = true)
     private UuidUtil uuidUtil;
 
+    @Autowired(required = true)
+    PasswordEncoder passwordEncoder;
 
     public UserServiceImpl() {
         log.info("Loading UserServiceImpl!!!!");
@@ -48,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUser(String userId) {
         log.info(format("getUser of class UserServiceImpl with userId %s", userId));
         Optional<UserEntity> userEntity = ofNullable(userRepository.findByUserId(userId)).orElseThrow(() -> new UserNotFoundException(userId));
-        return modelMapperUtil.getUserDto(userEntity.get());
+        return map(userEntity.get(), UserDto.class);
     }
 
     @Override
@@ -58,19 +60,20 @@ public class UserServiceImpl implements UserService {
         if (entities.isEmpty()) {
             throw new NoDataFoundException();
         }
-        return modelMapperUtil.getUserDtosFromUserEntities(entities);
+        return mapAll(entities, UserDto.class);
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("createUser of class UserServiceImpl");
         of(userRepository.findByEmailId(userDto.getEmailId())).ifPresent(userEntity -> {
-          throw  new DuplicateUserException("EmailId", userEntity.get().getEmailId());
+            throw new DuplicateUserException("EmailId", userEntity.get().getEmailId());
         });
-        String userId = uuidUtil.getNextUuid();
-        userDto.setUserId(userId);
-        UserEntity saveedEntity = userRepository.save(modelMapperUtil.getUserEntity(userDto));
-        return modelMapperUtil.getUserDto(saveedEntity);
+        UserEntity userEntity = map(userDto, UserEntity.class);
+        userEntity.setEncryptedPassword(passwordEncoder.encode(userDto.getPassword()));
+        userEntity.setUserId(uuidUtil.getNextUuid());
+        UserEntity savedEntity = userRepository.save(userEntity);
+        return map(savedEntity, UserDto.class);
     }
 
     @Override
@@ -83,7 +86,7 @@ public class UserServiceImpl implements UserService {
             return userEntity;
         }).orElseThrow(() -> new UserNotFoundException(userId));
         userRepository.flush();
-        return modelMapperUtil.getUserDto(updateUserEntity);
+        return map(updateUserEntity, UserDto.class);
     }
 
     @Override
@@ -107,6 +110,6 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByEmailId(String emailId) {
         log.info("getUserByEmailId of class UserServiceImpl called");
         UserEntity userEntity = ofNullable(userRepository.findByEmailId(emailId)).orElseThrow(() -> new UserNotFoundException("EmailId", emailId)).get();
-        return modelMapperUtil.getUserDto(userEntity);
+        return map(userEntity, UserDto.class);
     }
 }
