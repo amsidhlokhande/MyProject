@@ -39,18 +39,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(environment.getProperty("api.zuul.actuator.url.path")).permitAll()
                 .antMatchers(environment.getProperty("api.users-ws.actuator.url.path")).permitAll()
                 .antMatchers(environment.getProperty("api.account-ws.actuator.url.path")).permitAll()
-                //.antMatchers(environment.getProperty("api.albums-ws.url.path")).permitAll()
-                //.antMatchers(environment.getProperty("api.albums-ws.users-albums")).permitAll()
+                .antMatchers(environment.getProperty("api.albums-ws.url.path")).permitAll()
+                .antMatchers(environment.getProperty("api.swagger.url.path", String[].class)).permitAll()
                 .anyRequest().authenticated()
         .and().addFilter(getAuthenticationFilter());
 
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-    }
-
-    @Override
-    public void configure(org.springframework.security.config.annotation.web.builders.WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(environment.getProperty("api.albums-ws.url.path"))
-                      .antMatchers(environment.getProperty("api.zuul.swagger.url.path", String[].class));
     }
 
     private Filter getAuthenticationFilter() throws Exception {

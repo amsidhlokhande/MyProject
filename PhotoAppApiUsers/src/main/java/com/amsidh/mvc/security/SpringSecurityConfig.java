@@ -23,7 +23,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
 
     @Autowired
-    public SpringSecurityConfig(Environment environment,BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
+    public SpringSecurityConfig(Environment environment, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
         log.info("SpringSecurityConfig loading!!!");
         this.environment = environment;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -36,10 +36,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
 
         httpSecurity.authorizeRequests()
+                .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/**")
                 .hasIpAddress(environment.getProperty("ip.address.security.allow"))
-        .and()
-        .addFilter(getAuthenticationFilter());
+                .and()
+                .addFilter(getAuthenticationFilter());
 
         httpSecurity.headers().frameOptions().disable();
     }
@@ -47,7 +48,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public AuthenticationFilter getAuthenticationFilter() throws Exception {
         log.info("getAuthenticationFilter method of class SpringSecurityConfig called");
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService,environment, authenticationManager());
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService, environment, authenticationManager());
         authenticationFilter.setFilterProcessesUrl(environment.getProperty("login.url.path"));
         return authenticationFilter;
     }
