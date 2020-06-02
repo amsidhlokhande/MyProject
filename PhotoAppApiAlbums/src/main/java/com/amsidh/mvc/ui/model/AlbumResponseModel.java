@@ -6,18 +6,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class UserResponseModel {
-
+public class AlbumResponseModel {
+    private String albumId;
     private String userId;
-    private String firstName;
-    private String lastName;
-    private String emailId;
-    List<AlbumResponseModel> albums;
+    private String name;
+    private String description;
 }

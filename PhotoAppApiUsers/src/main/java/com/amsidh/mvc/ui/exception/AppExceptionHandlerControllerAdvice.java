@@ -13,7 +13,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
 public class AppExceptionHandlerControllerAdvice extends ResponseEntityExceptionHandler {
@@ -22,51 +28,51 @@ public class AppExceptionHandlerControllerAdvice extends ResponseEntityException
     public ResponseEntity<ExceptionResponseDto> handleAnyException(
             Exception exception, WebRequest request) {
         ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto();
-        exceptionResponseDto.setDate(LocalDateTime.now());
+        exceptionResponseDto.setDate(now());
         exceptionResponseDto.setMessage(ofNullable(exception.getLocalizedMessage()).orElse("No exception message found"));
-        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(exceptionResponseDto, INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ExceptionResponseDto> handleNullPointerException(
             NullPointerException exception, WebRequest request) {
         ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto();
-        exceptionResponseDto.setDate(LocalDateTime.now());
+        exceptionResponseDto.setDate(now());
         exceptionResponseDto.setMessage(ofNullable(exception.getLocalizedMessage()).orElse("No exception message found"));
-        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(exceptionResponseDto, INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = {UserNotFoundException.class, NoDataFoundException.class})
     public ResponseEntity<ExceptionResponseDto> handleNotFoundException(
             Exception exception, WebRequest request) {
         ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto();
-        exceptionResponseDto.setDate(LocalDateTime.now());
+        exceptionResponseDto.setDate(now());
         exceptionResponseDto.setMessage(ofNullable(exception.getLocalizedMessage()).orElse("No exception message found"));
-        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exceptionResponseDto, NOT_FOUND);
     }
 
     @ExceptionHandler(value = {DuplicateUserException.class})
     public ResponseEntity<ExceptionResponseDto> handleDataAlreadyExistsException(
             Exception exception, WebRequest request) {
         ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto();
-        exceptionResponseDto.setDate(LocalDateTime.now());
+        exceptionResponseDto.setDate(now());
         exceptionResponseDto.setMessage(ofNullable(exception.getLocalizedMessage()).orElse("No exception message found"));
-        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(exceptionResponseDto, CONFLICT);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto();
-        exceptionResponseDto.setDate(LocalDateTime.now());
+        exceptionResponseDto.setDate(now());
         exceptionResponseDto.setStatus(status.value());
 
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(fieldError -> fieldError.getDefaultMessage())
-                .collect(Collectors.toList());
+                .collect(toList());
         exceptionResponseDto.setErrors(errors);
 
-        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponseDto, BAD_REQUEST);
     }
 }

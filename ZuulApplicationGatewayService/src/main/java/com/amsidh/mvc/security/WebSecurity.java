@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 import javax.servlet.Filter;
 
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -30,17 +33,26 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST,environment.getProperty("api.login.url.path")).permitAll()
-                .antMatchers(HttpMethod.POST,environment.getProperty("api.registration.url.path")).permitAll()
+                .antMatchers(POST,environment.getProperty("api.login.url.path")).permitAll()
+                .antMatchers(POST,environment.getProperty("api.registration.url.path")).permitAll()
                 .antMatchers(environment.getProperty("api.h2console.url.path")).permitAll()
                 .antMatchers(environment.getProperty("api.zuul.actuator.url.path")).permitAll()
                 .antMatchers(environment.getProperty("api.users-ws.actuator.url.path")).permitAll()
                 .antMatchers(environment.getProperty("api.account-ws.actuator.url.path")).permitAll()
+                //.antMatchers(environment.getProperty("api.albums-ws.url.path")).permitAll()
+                //.antMatchers(environment.getProperty("api.albums-ws.users-albums")).permitAll()
                 .anyRequest().authenticated()
         .and().addFilter(getAuthenticationFilter());
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(STATELESS);
     }
+
+    @Override
+    public void configure(org.springframework.security.config.annotation.web.builders.WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(environment.getProperty("api.albums-ws.url.path"))
+                      .antMatchers(environment.getProperty("api.zuul.swagger.url.path", String[].class));
+    }
+
     private Filter getAuthenticationFilter() throws Exception {
         AuthFilter authFilter = new AuthFilter(environment,authenticationManager());
         return authFilter;

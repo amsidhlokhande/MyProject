@@ -23,6 +23,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static io.jsonwebtoken.Jwts.builder;
+import static io.jsonwebtoken.SignatureAlgorithm.HS512;
+import static java.lang.Long.parseLong;
+import static java.lang.System.currentTimeMillis;
+
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -58,10 +63,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         User user = (User) authentication.getPrincipal();
         UserDto userDto = userService.getUserByEmailId(user.getUsername());
 
-        String jwtToken = Jwts.builder()
+        String jwtToken = builder()
                 .setSubject(userDto.getUserId())
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("jwt.token.expirationTime"))))
-                .signWith(SignatureAlgorithm.HS512, environment.getProperty("jwt.token.secret"))
+                .setExpiration(new Date(currentTimeMillis() + parseLong(environment.getProperty("jwt.token.expirationTime"))))
+                .signWith(HS512, environment.getProperty("jwt.token.secret"))
                 .compact();
 
         response.setHeader("token", jwtToken);

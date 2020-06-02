@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class UserRequestModel {
+public class CreateUserRequestModel {
 
     private String userId;
 
