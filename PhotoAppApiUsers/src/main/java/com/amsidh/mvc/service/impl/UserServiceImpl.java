@@ -86,9 +86,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("createUser of class UserServiceImpl");
-        of(userRepository.findByEmailId(userDto.getEmailId())).ifPresent(userEntity -> {
-            throw new DuplicateUserException("EmailId", userEntity.get().getEmailId());
-        });
+        Optional<UserEntity> duplicationUserEntity = userRepository.findByEmailId(userDto.getEmailId());
+        if(duplicationUserEntity.isPresent()){
+            throw new DuplicateUserException("EmailId", userDto.getEmailId());
+        };
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
         userEntity.setEncryptedPassword(passwordEncoder.encode(userDto.getPassword()));
         userEntity.setUserId(randomUUID().toString());
