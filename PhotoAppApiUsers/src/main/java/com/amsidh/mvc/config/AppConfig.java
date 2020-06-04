@@ -1,5 +1,6 @@
 package com.amsidh.mvc.config;
 
+import feign.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -35,5 +36,10 @@ public class AppConfig {
         log.info("getRestTemplate method is called!!!");
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate;
+    }
+
+    @Bean
+    Logger.Level getFeignLogLevel(){
+        return Logger.Level.FULL;
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = {"com.amsidh.mvc.repository"})
 @EnableDiscoveryClient
+@EnableFeignClients
 public class PhotoAppApiUsersApplication implements CommandLineRunner {
 
     @Autowired
@@ -25,8 +27,6 @@ public class PhotoAppApiUsersApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("api.users-ws.actuator.url.path :"+environment.getProperty("api.users-ws.actuator.url.path"));
-        System.out.println("api.zuul.swagger.url.path :"+environment.getProperty("api.zuul.swagger.url.path", String[].class));
         System.out.println("ip.address.security.allow :"+environment.getProperty("ip.address.security.allow"));
     }
 }

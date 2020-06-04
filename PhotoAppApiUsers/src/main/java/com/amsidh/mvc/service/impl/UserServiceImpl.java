@@ -1,5 +1,6 @@
 package com.amsidh.mvc.service.impl;
 
+import com.amsidh.mvc.repository.AlbumServiceClient;
 import com.amsidh.mvc.repository.UserRepository;
 import com.amsidh.mvc.repository.entity.UserEntity;
 import com.amsidh.mvc.service.UserService;
@@ -48,16 +49,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
-    private final RestTemplate restTemplate;
+    //private final RestTemplate restTemplate;
+    private final AlbumServiceClient albumServiceClient;
 
 
     @Autowired
-    public UserServiceImpl(Environment environment, UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, RestTemplate restTemplate) {
+    public UserServiceImpl(Environment environment, UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, /*RestTemplate restTemplate*/ AlbumServiceClient albumServiceClient) {
         this.environment = environment;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
-        this.restTemplate = restTemplate;
+        //this.restTemplate = restTemplate;
+        this.albumServiceClient = albumServiceClient;
     }
 
     @Override
@@ -136,13 +139,14 @@ public class UserServiceImpl implements UserService {
 
     List<AlbumResponseModel> getAlbumResponseModel(String userId) {
         log.info(format("getAlbumResponseModel of class UserServiceImpl with userId %s", userId));
-       HttpEntity httpEntity = new HttpEntity(new HttpHeaders() {{
+       /*HttpEntity httpEntity = new HttpEntity(new HttpHeaders() {{
             setAccept(asList(APPLICATION_JSON));
         }});
         String albumGetApiUrl = format(environment.getProperty("albums.get.api.url"), userId);
         log.info("Rest url :" + albumGetApiUrl);
         ResponseEntity<List<AlbumResponseModel>> exchange = restTemplate.exchange(albumGetApiUrl, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
         });
-        return exchange.getBody();
+        return exchange.getBody();*/
+       return albumServiceClient.getAlbumsByUserId(userId);
     }
 }
