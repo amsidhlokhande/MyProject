@@ -9,22 +9,17 @@ import com.amsidh.mvc.ui.exception.DuplicateUserException;
 import com.amsidh.mvc.ui.exception.NoDataFoundException;
 import com.amsidh.mvc.ui.exception.UserNotFoundException;
 import com.amsidh.mvc.ui.model.AlbumResponseModel;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
@@ -33,11 +28,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static java.util.UUID.randomUUID;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Slf4j
 @Service
@@ -90,9 +82,10 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         log.info("createUser of class UserServiceImpl");
         Optional<UserEntity> duplicationUserEntity = userRepository.findByEmailId(userDto.getEmailId());
-        if(duplicationUserEntity.isPresent()){
+        if (duplicationUserEntity.isPresent()) {
             throw new DuplicateUserException("EmailId", userDto.getEmailId());
-        };
+        }
+        ;
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
         userEntity.setEncryptedPassword(passwordEncoder.encode(userDto.getPassword()));
         userEntity.setUserId(randomUUID().toString());
@@ -147,6 +140,11 @@ public class UserServiceImpl implements UserService {
         ResponseEntity<List<AlbumResponseModel>> exchange = restTemplate.exchange(albumGetApiUrl, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
         });
         return exchange.getBody();*/
-       return albumServiceClient.getAlbumsByUserId(userId);
+        try {
+            return albumServiceClient.getAlbumsByUserId(userId);
+        } catch (FeignException exception) {
+            log.error(exception.getMessage());
+        }
+        return null;
     }
 }
