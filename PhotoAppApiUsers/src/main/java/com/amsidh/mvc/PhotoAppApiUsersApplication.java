@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.core.env.Environment;
@@ -18,6 +19,7 @@ import static java.lang.String.format;
 @EnableJpaRepositories(basePackages = {"com.amsidh.mvc.repository"})
 @EnableDiscoveryClient
 @EnableFeignClients
+@EnableCircuitBreaker
 public class PhotoAppApiUsersApplication implements CommandLineRunner {
 
     @Autowired
