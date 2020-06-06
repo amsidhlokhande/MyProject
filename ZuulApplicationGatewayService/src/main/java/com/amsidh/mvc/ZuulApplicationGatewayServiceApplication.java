@@ -1,5 +1,6 @@
 package com.amsidh.mvc;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -8,7 +9,9 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.core.env.Environment;
 
+import static java.lang.String.format;
 
+@Slf4j
 @SpringBootApplication
 @EnableEurekaClient
 @EnableZuulProxy
@@ -23,6 +26,6 @@ public class ZuulApplicationGatewayServiceApplication implements CommandLineRunn
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("Read Property 'api.users-ws.actuator.url.path':"+ this.environment.getProperty("api.users-ws.actuator.url.path"));
+		log.info(format("Read Property 'api.users-ws.actuator.url.path': %s", this.environment.getProperty("api.users-ws.actuator.url.path")));
 	}
 }

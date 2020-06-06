@@ -20,7 +20,7 @@ import java.util.Collections;
 public class SwaggerConfig {
 
     Parameter authHeader = new ParameterBuilder().parameterType("header").name("Authorization")
-            .modelRef(new ModelRef("string")).defaultValue("Bearer XXXXXXXXXXXXXXXXXXXXX")// Base64.getEncoder().encodeToString("amsidhlokhande:password".getBytes()))
+            .modelRef(new ModelRef("string")).defaultValue("Bearer XXXXXXXXXXXXXXXXXXXXX")
             .required(true) // for compulsory
             .build();
 

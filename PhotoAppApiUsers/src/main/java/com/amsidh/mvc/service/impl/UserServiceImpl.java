@@ -9,7 +9,6 @@ import com.amsidh.mvc.ui.exception.DuplicateUserException;
 import com.amsidh.mvc.ui.exception.NoDataFoundException;
 import com.amsidh.mvc.ui.exception.UserNotFoundException;
 import com.amsidh.mvc.ui.model.AlbumResponseModel;
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -132,19 +131,6 @@ public class UserServiceImpl implements UserService {
 
     List<AlbumResponseModel> getAlbumResponseModel(String userId) {
         log.info(format("getAlbumResponseModel of class UserServiceImpl with userId %s", userId));
-       /*HttpEntity httpEntity = new HttpEntity(new HttpHeaders() {{
-            setAccept(asList(APPLICATION_JSON));
-        }});
-        String albumGetApiUrl = format(environment.getProperty("albums.get.api.url"), userId);
-        log.info("Rest url :" + albumGetApiUrl);
-        ResponseEntity<List<AlbumResponseModel>> exchange = restTemplate.exchange(albumGetApiUrl, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
-        });
-        return exchange.getBody();*/
-        try {
-            return albumServiceClient.getAlbumsByUserId(userId);
-        } catch (FeignException exception) {
-            log.error(exception.getMessage());
-        }
-        return null;
+        return albumServiceClient.getAlbumsByUserId(userId);
     }
 }

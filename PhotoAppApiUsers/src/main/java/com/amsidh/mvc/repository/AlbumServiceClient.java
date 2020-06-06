@@ -11,7 +11,7 @@ import java.util.List;
 @FeignClient(name = "albums-ws")
 public interface AlbumServiceClient {
 
-    @GetMapping(value = "/users/{userId}/albumses")
+    @GetMapping(value = "/users/{userId}/albumss")
     public List<AlbumResponseModel> getAlbumsByUserId(@PathVariable(name = "userId", required = true) String userId);
 
 }
