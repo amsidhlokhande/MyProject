@@ -25,7 +25,7 @@ public class FeignExceptionDecoder implements ErrorDecoder {
         switch (response.status()) {
             case 404:
                 if (methodKey.contains(environment.getProperty("get.users.albums.method.name")))
-                    return new ResponseStatusException(HttpStatus.valueOf(response.status()), environment.getProperty("users.albums.not.found"));
+                    return new ResponseStatusException(HttpStatus.valueOf(response.status()), environment.getProperty("albums.exception.albums.not.found"));
                 break;
             case 400:
                 return new ResponseStatusException(HttpStatus.valueOf(response.status()),response.reason());
