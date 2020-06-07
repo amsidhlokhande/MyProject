@@ -15,13 +15,13 @@ import static java.lang.String.format;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableZuulProxy
-public class ZuulApplicationGatewayServiceApplication implements CommandLineRunner {
+public class GatewayServiceWSApplication implements CommandLineRunner {
 
 	@Autowired
 	private Environment environment;
 
 	public static void main(String[] args) {
-		SpringApplication.run(ZuulApplicationGatewayServiceApplication.class, args);
+		SpringApplication.run(GatewayServiceWSApplication.class, args);
 	}
 
 	@Override

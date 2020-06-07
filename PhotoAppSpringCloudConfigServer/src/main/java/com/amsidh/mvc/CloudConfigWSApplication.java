@@ -7,14 +7,13 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 
 @SpringBootApplication
 @EnableConfigServer
-public class PhotoAppSpringCloudConfigServerApplication implements CommandLineRunner {
+public class CloudConfigWSApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PhotoAppSpringCloudConfigServerApplication.class, args);
+		SpringApplication.run(CloudConfigWSApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-
 	}
 }

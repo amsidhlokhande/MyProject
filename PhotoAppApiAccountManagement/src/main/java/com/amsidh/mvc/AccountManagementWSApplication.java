@@ -15,13 +15,13 @@ import static java.lang.String.format;
 @Slf4j
 @SpringBootApplication
 @EnableDiscoveryClient
-public class PhotoAppApiAccountManagementApplication implements CommandLineRunner {
+public class AccountManagementWSApplication implements CommandLineRunner {
 
 	@Autowired
 	private Environment environment;
 
 	public static void main(String[] args) {
-		Class[] classes = {PhotoAppApiAccountManagementApplication.class, SwaggerConfig.class};
+		Class[] classes = {AccountManagementWSApplication.class, SwaggerConfig.class};
 		SpringApplication.run(classes, args);
 	}
 
