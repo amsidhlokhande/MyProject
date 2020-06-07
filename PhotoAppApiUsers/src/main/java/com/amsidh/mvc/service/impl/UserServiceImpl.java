@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userEntity = ofNullable(userRepository.findByUserId(userId)).orElseThrow(() -> new UserNotFoundException(userId));
         UserDto userDto = modelMapper.map(userEntity.get(), UserDto.class);
         List<AlbumResponseModel> albumResponseModels = getAlbumResponseModel(userId);
+        log.info("Response received from albums-ws micro service");
         userDto.setAlbums(albumResponseModels);
         return userDto;
     }
@@ -130,7 +131,7 @@ public class UserServiceImpl implements UserService {
     }
 
     List<AlbumResponseModel> getAlbumResponseModel(String userId) {
-        log.info(format("getAlbumResponseModel of class UserServiceImpl with userId %s", userId));
+        log.info(format("Calling albums-ws service to get album list associated to userId %s", userId));
         return albumServiceClient.getAlbumsByUserId(userId);
     }
 }
